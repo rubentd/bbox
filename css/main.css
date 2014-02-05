@@ -1,0 +1,14 @@
+body{
+	font-style: 'Helvetica Neue', 'Arial', 'sans serif';
+	background-color:#C5DEE3;
+}
+
+.main{
+	padding:20px;
+	-webkit-perspective:800px;
+}
+
+h1{
+	margin-bottom:0;
+}
+
