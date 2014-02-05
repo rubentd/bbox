@@ -25,15 +25,15 @@
 
 		addDomEvents: function(){
 			var box=this;
-			$('#width').on('keyup', function(){
+			$('#width').on('keyup keydown', function(){
 				box.width=$(this).val();
 				box.redraw();
 			});
-			$('#height').on('keyup', function(){
+			$('#height').on('keyup keydown', function(){
 				box.height=$(this).val();
 				box.redraw();
 			});
-			$('#depth').on('keyup', function(){
+			$('#depth').on('keyup keydown', function(){
 				box.depth=$(this).val();
 				box.redraw();
 			});
