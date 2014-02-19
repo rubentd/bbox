@@ -14,6 +14,10 @@
 		this.backFace=elem.find('.face.back');
 		this.topFace=elem.find('.face.top');
 		this.bottomFace=elem.find('.face.bottom');
+		
+		//tools
+		this.currentTool='planeShear'; //none, planeShear
+		this.planeShear=$('#tool-plane-shear-wrap');
 	}
 
 	BoundingBox.prototype = {
@@ -21,6 +25,7 @@
 		init: function(){
 			this.addDomEvents();
 			this.redraw();
+			this.drawTools();
 		},
 
 		addDomEvents: function(){
@@ -35,6 +40,10 @@
 			});
 			$('#depth').on('keyup keydown', function(){
 				box.depth=$(this).val();
+				box.redraw();
+			});
+			$("input[name=tool]").change(function(){
+				box.currentTool=$(this).val();
 				box.redraw();
 			});
 		},
@@ -78,7 +87,21 @@
 			tBottom += ' translateZ('+this.height/2+'px)';
 			console.log(tBottom);
 			this.bottomFace.css('-webkit-transform', tBottom);
-		}
+
+			this.drawTools();
+		},
+
+		drawTools: function(){
+			switch(this.currentTool){
+				case 'none':
+					this.planeShear.hide();
+					break;
+				case 'planeShear':
+					this.planeShear.show();
+					break;
+			}
+		},
+
 	}
 
 	$.fn.boundingbox = function(options) {

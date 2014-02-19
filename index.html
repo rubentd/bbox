@@ -19,6 +19,11 @@
 				<label>width:</label> <input type="number" min="10" max="1000" id="width" value="200"><br>
 				<label>height:</label> <input type="number" min="10" max="1000" id="height" value="200"><br>
 				<label>depth:</label> <input type="number" min="10" max="1000" id="depth" value="200"><br>
+				<p>Current tool:</p>
+				<label for="tool-none">None</label>
+				<input type="radio" id="tool-none" name="tool" value="none">
+				<label for="tool-plane-shear">Plane shear</label>
+				<input type="radio" id="tool-plane-shear" name="tool" value="planeShear" checked>
 			</div>
 			
 			<div id="bbox1" class="bbox-wrap">
@@ -28,6 +33,23 @@
 					<li class="face back"></li>
 					<li class="face top"></li>
 					<li class="face bottom"></li>
+				
+					<ul id="tool-plane-shear-wrap">
+						<li id="handle-front-top" class="handle front-top"></li>	
+						<li id="handle-front-bottom" class="handle front-bottom"></li>
+						<li id="handle-front-left" class="handle front-left"></li>
+						<li id="handle-front-right" class="handle front-right"></li>
+
+						<li id="handle-back-top" class="handle back-top"></li>
+						<li id="handle-back-bottom" class="handle back-bottom"></li>
+						<li id="handle-back-left" class="handle back-left"></li>
+						<li id="handle-back-right" class="handle back-right"></li>
+
+						<li id="handle-center-top-right" class="handle center-top-right"></li>
+						<li id="handle-center-bottom-right" class="handle center-top-left"></li>
+						<li id="handle-center-top-left" class="handle center-bottom-left"></li>
+						<li id="handle-center-top-right" class="handle center-bottom-right"></li>
+					</ul>
 				</ul>
 			</div>
 			
