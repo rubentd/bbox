@@ -9,27 +9,39 @@
 
 		<link rel="stylesheet" href="css/normalize.min.css">
 		<link rel="stylesheet" href="css/main.css">
-
+		
 	</head>
 	<body>
 		<div id="main" class="main">
+
 			<h1>Bounding box</h1>
 
 			<div class="menu properties">
 				<label>width:</label> <input type="number" min="10" max="1000" id="width" value="200"><br>
 				<label>height:</label> <input type="number" min="10" max="1000" id="height" value="200"><br>
 				<label>depth:</label> <input type="number" min="10" max="1000" id="depth" value="200"><br>
+				<p>Plane shear amount<p>
+				<label>top-x</label><input type="number" min="-90" max="90" id="ps-top-x" value="0"><br>
+
 				<p>Current tool:</p>
 				<label for="tool-none">None</label>
 				<input type="radio" id="tool-none" name="tool" value="none">
 				<label for="tool-plane-shear">Plane shear</label>
 				<input type="radio" id="tool-plane-shear" name="tool" value="planeShear" checked>
+
 			</div>
 			
 			<div id="bbox1" class="bbox-wrap">
 				<ul class="bbox">
 					<li class="core"></li>
-					<li class="face front"></li>
+					
+					<li class="face front">
+						<div class="vertex front top"></div>
+						<div class="vertex front bottom"></div>
+						<div class="vertex front left"></div>
+						<div class="vertex front right"></div>
+					</li>
+
 					<li class="face back"></li>
 					<li class="face top"></li>
 					<li class="face bottom"></li>

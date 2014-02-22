@@ -1,7 +1,6 @@
 $(document).ready( function(){
 
-	$("#bbox1").draggable();
+	$("#bbox1").draggable({ handle: '.core' });
 	$("#bbox1").boundingbox();
 	
 });
-

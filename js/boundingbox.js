@@ -2,6 +2,14 @@
  * Bounding box
  */
 
+function degToRad(angle){
+	return angle*Math.PI/180;
+}
+
+function radToDeg(angle){
+	return angle/Math.PI*180;
+}
+
  (function($) {
 
 	function BoundingBox(elem, options){
@@ -10,10 +18,21 @@
 		this.height=options.width;
 		this.depth=options.depth;
 		this.mainBox=elem;
+
+		//faces
 		this.frontFace=elem.find('.face.front');
 		this.backFace=elem.find('.face.back');
 		this.topFace=elem.find('.face.top');
 		this.bottomFace=elem.find('.face.bottom');
+
+		//vertex
+		this.vertexFrontTop=elem.find('.vertex.front.top');
+		this.vertexFrontBottom=elem.find('.vertex.front.botom');
+		this.vertexFrontLeft=elem.find('.vertex.front.left');
+		this.vertexFrontRight=elem.find('.vertex.front.right');
+
+		this.shearTopX=0;
+		this.shearTopZ=0;
 		
 		//tools
 		this.currentTool='planeShear'; //none, planeShear
@@ -46,6 +65,12 @@
 				box.currentTool=$(this).val();
 				box.redraw();
 			});
+
+			//Plane shear
+			$("#ps-top-x").change(function(){
+				box.shearTopX=degToRad($(this).val());
+				box.redraw();
+			});
 		},
 
 		redraw: function(){
@@ -53,10 +78,21 @@
 			this.frontFace.css('width', this.width + 'px');
 			this.frontFace.css('height', this.height + 'px');
 			var tFront = '';
-			tFront += 'translateX(-'+this.width/2+'px)';
+			tFront += ' translateX(-'+this.width/2+'px)';
 			tFront += ' translateZ('+this.depth/2+'px)';
 			tFront += ' translateY(-'+this.height/2+'px)';
 			this.frontFace.css('-webkit-transform', tFront);
+			//vertex transformations: front left
+			this.vertexFrontLeft.css('-webkit-transform', 'rotateZ('+radToDeg(this.shearTopX) + 'deg)');
+			this.vertexFrontLeft.css('left', Math.sin(this.shearTopX)*this.height/2 + 'px');
+			this.vertexFrontLeft.css('top', this.height/2 - Math.cos(this.shearTopX)*this.height/2 + 'px');
+			//vertex transformations: front right
+			this.vertexFrontRight.css('-webkit-transform', 'rotateZ('+radToDeg(this.shearTopX) + 'deg)');
+			this.vertexFrontRight.css('left', this.width + Math.sin(this.shearTopX)*this.height/2 + 'px');
+			this.vertexFrontRight.css('top', this.height/2 - Math.cos(this.shearTopX)*this.height/2 + 'px');
+			//vertex transformations: front top
+			this.vertexFrontTop.css('left', Math.sin(this.shearTopX)*this.height + 'px');
+			this.vertexFrontTop.css('top', this.height -Math.cos(this.shearTopX)*this.height + 'px');
 			
 			//back
 			this.backFace.css('width', this.width + 'px');
