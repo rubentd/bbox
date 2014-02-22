@@ -87,87 +87,48 @@ li.core{
 
 .face.front {
 	-webkit-transform: translateX(-100px) translateZ(100px) translateY(-100px);
-	border:1px dashed navy;
+	border:1px dashed #bbb;
 }
 .face.back {
 	-webkit-transform: translateX(-100px) translateZ(-100px) translateY(-100px);
-	border:1px dashed navy;
+	border:1px dashed #bbb;
 }
-.face.top {
-	-webkit-transform: translateX(-100px) translateY(-100px) rotateX(90deg) translateZ(-100px);
-	border-right:1px dashed navy;
-	border-left:1px dashed navy;
-}
-.face.bottom {
+.face.upper {
 	-webkit-transform: translateX(-100px) translateY(-100px) rotateX(90deg) translateZ(100px);
-	border-right:1px dashed navy;
-	border-left:1px dashed navy;	
+	border-right:1px dashed #bbb;
+	border-left:1px dashed #bbb;	
+}
+.face.lower {
+	-webkit-transform: translateX(-100px) translateY(-100px) rotateX(90deg) translateZ(-100px);
+	border-right:1px dashed #bbb;
+	border-left:1px dashed #bbb;
 }
 
 .vertex.top{
 	border-top:1px solid red;
-	width:200px;
+	width:100%;
 	position:absolute;
 	top:0;
 	left:0;
 }
 .vertex.bottom{
 	border-top:1px solid red;
-	width:200px;
+	width:100%;
 	position:absolute;
-	top:200px;
+	top:100%;
 	left:0;
 }
 .vertex.left{
 	border-left:1px solid red;
-	height:200px;
+	height:100%;
 	position:absolute;
 	top:0;
 	left:0;
 }
 .vertex.right{
 	border-left:1px solid red;
-	height:200px;
+	height:100%;
 	position:absolute;
 	top:0;
-	left:200px;
+	left:100%;
 }
-
-/*.handle.front-top{
-	-webkit-transform: translateY(-100px) translateZ(100px);
-}
-.handle.front-bottom{
-	-webkit-transform: translateY(100px) translateZ(100px);
-}
-.handle.front-left{
-	-webkit-transform: translateX(-100px) translateZ(100px);
-}
-.handle.front-right{
-	-webkit-transform: translateX(100px) translateZ(100px);
-}
-
-.handle.back-top{
-	-webkit-transform: translateY(-100px) translateZ(-100px);
-}
-.handle.back-bottom{
-	-webkit-transform: translateY(100px) translateZ(-100px);
-}
-.handle.back-left{
-	-webkit-transform: translateX(-100px) translateZ(-100px);
-}
-.handle.back-right{
-	-webkit-transform: translateX(100px) translateZ(-100px);
-}
-
-.handle.center-top-right{
-	-webkit-transform: translateY(100px) translateX(100px);
-}
-.handle.center-top-left{
-	-webkit-transform: translateY(100px) translateX(-100px);
-}
-.handle.center-bottom-left{
-	-webkit-transform: translateY(-100px) translateX(-100px);
-}
-.handle.center-bottom-right{
-	-webkit-transform: translateY(-100px) translateX(100px);
-}*/
