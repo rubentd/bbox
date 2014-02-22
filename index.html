@@ -17,9 +17,9 @@
 			<h1>Bounding box</h1>
 
 			<div class="menu properties">
-				<label>width:</label> <input type="number" min="10" max="1000" id="width" value="200"><br>
-				<label>height:</label> <input type="number" min="10" max="1000" id="height" value="200"><br>
-				<label>depth:</label> <input type="number" min="10" max="1000" id="depth" value="200"><br>
+				<label>width:</label> <input type="number" min="10" max="1000" id="width" value="200" disabled><br>
+				<label>height:</label> <input type="number" min="10" max="1000" id="height" value="200"disabled><br>
+				<label>depth:</label> <input type="number" min="10" max="1000" id="depth" value="200"disabled><br>
 				<p>Plane shear amount<p>
 				<label>top-x</label><input type="number" min="-90" max="90" id="ps-top-x" value="0"><br>
 
@@ -42,7 +42,13 @@
 						<div class="vertex front right"></div>
 					</li>
 
-					<li class="face back"></li>
+					<li class="face back">
+						<div class="vertex back top"></div>
+						<div class="vertex back bottom"></div>
+						<div class="vertex back left"></div>
+						<div class="vertex back right"></div>
+					</li>
+
 					<li class="face top"></li>
 					<li class="face bottom"></li>
 				

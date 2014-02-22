@@ -26,10 +26,10 @@ function radToDeg(angle){
 		this.bottomFace=elem.find('.face.bottom');
 
 		//vertex
-		this.vertexFrontTop=elem.find('.vertex.front.top');
-		this.vertexFrontBottom=elem.find('.vertex.front.botom');
-		this.vertexFrontLeft=elem.find('.vertex.front.left');
-		this.vertexFrontRight=elem.find('.vertex.front.right');
+		this.vertexFrontTop=elem.find('.vertex.top');
+		this.vertexFrontBottom=elem.find('.vertex.botom');
+		this.vertexFrontLeft=elem.find('.vertex.left');
+		this.vertexFrontRight=elem.find('.vertex.right');
 
 		this.shearTopX=0;
 		this.shearTopZ=0;
@@ -74,6 +74,12 @@ function radToDeg(angle){
 		},
 
 		redraw: function(){
+			this.faceTransformations();
+			this.vertexTransformations();
+			this.drawTools();
+		},
+
+		faceTransformations: function(){
 			//front
 			this.frontFace.css('width', this.width + 'px');
 			this.frontFace.css('height', this.height + 'px');
@@ -82,18 +88,7 @@ function radToDeg(angle){
 			tFront += ' translateZ('+this.depth/2+'px)';
 			tFront += ' translateY(-'+this.height/2+'px)';
 			this.frontFace.css('-webkit-transform', tFront);
-			//vertex transformations: front left
-			this.vertexFrontLeft.css('-webkit-transform', 'rotateZ('+radToDeg(this.shearTopX) + 'deg)');
-			this.vertexFrontLeft.css('left', Math.sin(this.shearTopX)*this.height/2 + 'px');
-			this.vertexFrontLeft.css('top', this.height/2 - Math.cos(this.shearTopX)*this.height/2 + 'px');
-			//vertex transformations: front right
-			this.vertexFrontRight.css('-webkit-transform', 'rotateZ('+radToDeg(this.shearTopX) + 'deg)');
-			this.vertexFrontRight.css('left', this.width + Math.sin(this.shearTopX)*this.height/2 + 'px');
-			this.vertexFrontRight.css('top', this.height/2 - Math.cos(this.shearTopX)*this.height/2 + 'px');
-			//vertex transformations: front top
-			this.vertexFrontTop.css('left', Math.sin(this.shearTopX)*this.height + 'px');
-			this.vertexFrontTop.css('top', this.height -Math.cos(this.shearTopX)*this.height + 'px');
-			
+
 			//back
 			this.backFace.css('width', this.width + 'px');
 			this.backFace.css('height', this.height + 'px');
@@ -102,7 +97,7 @@ function radToDeg(angle){
 			tBack += ' translateZ(-'+this.depth/2+'px)';
 			tBack += ' translateY(-'+this.height/2+'px)';
 			this.backFace.css('-webkit-transform', tBack);
-			
+
 			//top
 			this.topFace.css('width', this.width + 'px');
 			this.topFace.css('height', this.depth + 'px');
@@ -123,8 +118,20 @@ function radToDeg(angle){
 			tBottom += ' translateZ('+this.height/2+'px)';
 			console.log(tBottom);
 			this.bottomFace.css('-webkit-transform', tBottom);
+		},
 
-			this.drawTools();
+		vertexTransformations: function(){
+			//vertex transformations: front left
+			this.vertexFrontLeft.css('-webkit-transform', 'rotateZ('+radToDeg(this.shearTopX) + 'deg)');
+			this.vertexFrontLeft.css('left', Math.sin(this.shearTopX)*this.height/2 + 'px');
+			this.vertexFrontLeft.css('top', this.height/2 - Math.cos(this.shearTopX)*this.height/2 + 'px');
+			//vertex transformations: front right
+			this.vertexFrontRight.css('-webkit-transform', 'rotateZ('+radToDeg(this.shearTopX) + 'deg)');
+			this.vertexFrontRight.css('left', this.width + Math.sin(this.shearTopX)*this.height/2 + 'px');
+			this.vertexFrontRight.css('top', this.height/2 - Math.cos(this.shearTopX)*this.height/2 + 'px');
+			//vertex transformations: front top
+			this.vertexFrontTop.css('left', Math.sin(this.shearTopX)*this.height + 'px');
+			this.vertexFrontTop.css('top', this.height -Math.cos(this.shearTopX)*this.height + 'px');
 		},
 
 		drawTools: function(){
