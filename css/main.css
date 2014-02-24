@@ -87,46 +87,40 @@ li.core{
 
 .face.front {
 	-webkit-transform: translateX(-100px) translateZ(100px) translateY(-100px);
-	border:1px dashed #bbb;
 }
 .face.back {
 	-webkit-transform: translateX(-100px) translateZ(-100px) translateY(-100px);
-	border:1px dashed #bbb;
 }
 .face.upper {
 	-webkit-transform: translateX(-100px) translateY(-100px) rotateX(90deg) translateZ(100px);
-	border-right:1px dashed #bbb;
-	border-left:1px dashed #bbb;	
 }
 .face.lower {
 	-webkit-transform: translateX(-100px) translateY(-100px) rotateX(90deg) translateZ(-100px);
-	border-right:1px dashed #bbb;
-	border-left:1px dashed #bbb;
 }
 
 .vertex.top{
-	border-top:1px solid red;
+	border-top:1px dashed red;
 	width:100%;
 	position:absolute;
 	top:0;
 	left:0;
 }
 .vertex.bottom{
-	border-top:1px solid red;
+	border-top:1px dashed red;
 	width:100%;
 	position:absolute;
 	top:100%;
 	left:0;
 }
 .vertex.left{
-	border-left:1px solid red;
+	border-left:1px dashed red;
 	height:100%;
 	position:absolute;
 	top:0;
 	left:0;
 }
 .vertex.right{
-	border-left:1px solid red;
+	border-left:1px dashed red;
 	height:100%;
 	position:absolute;
 	top:0;

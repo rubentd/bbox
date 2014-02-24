@@ -33,12 +33,12 @@ function radToDeg(angle){
 
 		//vertex
 		this.vertexFrontTop=elem.find('.vertex.front.top');
-		this.vertexFrontBottom=elem.find('.vertex.front.botom');
+		this.vertexFrontBottom=elem.find('.vertex.front.bottom');
 		this.vertexFrontLeft=elem.find('.vertex.front.left');
 		this.vertexFrontRight=elem.find('.vertex.front.right');
 
 		this.vertexBackTop=elem.find('.vertex.back.top');
-		this.vertexBackBottom=elem.find('.vertex.back.botom');
+		this.vertexBackBottom=elem.find('.vertex.back.bottom');
 		this.vertexBackLeft=elem.find('.vertex.back.left');
 		this.vertexBackRight=elem.find('.vertex.back.right');
 
@@ -48,6 +48,7 @@ function radToDeg(angle){
 		this.vertexLowerRight=elem.find('.vertex.lower.right');
 
 		this.shearTopX=0;
+		this.shearTopY=0;
 		this.shearTopZ=0;
 		
 		//tools
@@ -85,6 +86,14 @@ function radToDeg(angle){
 			//Plane shear
 			$("#ps-top-x").change(function(){
 				box.shearTopX=degToRad($(this).val());
+				box.redraw();
+			});
+			$("#ps-top-y").change(function(){
+				box.shearTopY=degToRad($(this).val());
+				box.redraw();
+			});
+			$("#ps-top-z").change(function(){
+				box.shearTopZ=degToRad($(this).val());
 				box.redraw();
 			});
 		},
@@ -134,37 +143,81 @@ function radToDeg(angle){
 		},
 
 		shearTransformations: function(){
-			//vertex transformations: front left
-			var t1='rotateZ('+radToDeg(this.shearTopX) + 'deg)';
-			var sin=Math.sin(this.shearTopX)*this.height;
-			var cos=Math.cos(this.shearTopX)*this.height;
+			if(this.shearTopX!=0){
+				//TOPX
+				//vertex transformations: front left
+				var tx='rotateZ('+radToDeg(this.shearTopX) + 'deg)';
+				var sin=Math.sin(this.shearTopX)*this.height;
+				var cos=Math.cos(this.shearTopX)*this.height;
 
-			this.vertexFrontLeft.css('-webkit-transform', t1);
-			this.vertexFrontLeft.css('left', sin/2 + 'px');
-			this.vertexFrontLeft.css('top', this.height/2 - cos/2 + 'px');
-			//vertex transformations: front right
-			this.vertexFrontRight.css('-webkit-transform', t1);
-			this.vertexFrontRight.css('left', this.width + sin/2 + 'px');
-			this.vertexFrontRight.css('top', this.height/2 - cos/2 + 'px');
-			//vertex transformations: front top
-			this.vertexFrontTop.css('left', sin + 'px');
-			this.vertexFrontTop.css('top', this.height - cos + 'px');
+				this.vertexFrontLeft.css('-webkit-transform', tx);
+				this.vertexFrontLeft.css('left', sin/2 + 'px');
+				this.vertexFrontLeft.css('top', this.height/2 - cos/2 + 'px');
+				//vertex transformations: front right
+				this.vertexFrontRight.css('-webkit-transform', tx);
+				this.vertexFrontRight.css('left', this.width + sin/2 + 'px');
+				this.vertexFrontRight.css('top', (this.height - cos)/2 + 'px');
+				//vertex transformations: front top
+				this.vertexFrontTop.css('left', sin + 'px');
+				this.vertexFrontTop.css('top', this.height - cos + 'px');
 
-			this.vertexBackLeft.css('-webkit-transform', t1);
-			this.vertexBackLeft.css('left', sin/2 + 'px');
-			this.vertexBackLeft.css('top', this.height/2 - cos/2 + 'px');
-			//vertex transformations: front right
-			this.vertexBackRight.css('-webkit-transform', t1);
-			this.vertexBackRight.css('left', this.width + sin/2 + 'px');
-			this.vertexBackRight.css('top', this.height/2 - cos/2 + 'px');
-			//vertex transformations: front top
-			this.vertexBackTop.css('left', sin + 'px');
-			this.vertexBackTop.css('top', this.height - cos + 'px');
+				this.vertexBackLeft.css('-webkit-transform', tx);
+				this.vertexBackLeft.css('left', sin/2 + 'px');
+				this.vertexBackLeft.css('top', (this.height - cos)/2 + 'px');
+				//vertex transformations: front right
+				this.vertexBackRight.css('-webkit-transform', tx);
+				this.vertexBackRight.css('left', this.width + sin/2 + 'px');
+				this.vertexBackRight.css('top', (this.height - cos)/2 + 'px');
+				//vertex transformations: front top
+				this.vertexBackTop.css('left', sin + 'px');
+				this.vertexBackTop.css('top', this.height - cos + 'px');
 
-			//top face 
-			this.upperFace.css('left', sin + 'px');
-			this.tUpper += ' translateZ(' + (cos - this.height) + 'px)';
-			
+				//top face x 
+				this.upperFace.css('left', sin + 'px');
+				this.tUpper += ' translateZ(' + (cos - this.height) + 'px)';
+			}
+
+			if(this.shearTopZ!=0){
+				//TOPZ
+				var sinZ=Math.sin(this.shearTopZ)*this.height;
+				var cosZ=Math.cos(this.shearTopZ)*this.height;
+				var tz1=' rotateX('+radToDeg(-this.shearTopZ) + 'deg)';
+				var tz2=' translateZ('+ (sinZ)/2 + 'px)';
+				var tz3=' translateY('+ (this.height-cosZ)/2 + 'px)';
+				var tz4=' translateZ('+ -(this.height-cosZ) + 'px)';
+				var tz5=' translateY('+ (sinZ) + 'px)';
+				this.tFront += tz3 + tz2 + tz1;
+				this.tBack += tz3 + tz2 + tz1;
+				this.tUpper += tz4 + tz5;
+			}
+
+			if(this.shearTopY!=0){
+				//RIGHT Y
+				var ty='rotateZ('+radToDeg(this.shearTopY) + 'deg)';
+				var ty2=' rotateY('+radToDeg(this.shearTopY) + 'deg)';
+				var sinY=Math.sin(this.shearTopY)*this.width;
+				var cosY=Math.cos(this.shearTopY)*this.width;
+				this.vertexFrontTop.css('-webkit-transform', ty);
+				this.vertexFrontTop.css('top', (sinY/2) + 'px');
+				this.vertexFrontTop.css('left', (cosY - this.width)/2 + 'px');
+				this.vertexFrontBottom.css('-webkit-transform', ty);
+				this.vertexFrontBottom.css('top', this.height+(sinY/2) + 'px');
+				this.vertexFrontBottom.css('left', (cosY - this.width)/2 + 'px');
+				this.vertexBackTop.css('-webkit-transform', ty);
+				this.vertexBackTop.css('top', (sinY/2) + 'px');
+				this.vertexBackTop.css('left', (cosY - this.width)/2 + 'px');
+				this.vertexBackBottom.css('-webkit-transform', ty);
+				this.vertexBackBottom.css('top', this.height+(sinY/2) + 'px');
+				this.vertexBackBottom.css('left', (cosY - this.width)/2 + 'px');	
+				this.vertexFrontRight.css('top', (sinY) + 'px');
+				this.vertexFrontRight.css('left', (cosY) + 'px');
+				this.vertexBackRight.css('top', (sinY) + 'px');
+				this.vertexBackRight.css('left', (cosY) + 'px');
+				var ty3=' translateZ(' + (-sinY/2) + 'px)';
+				var ty4=' translateX(' + (this.width-cosY)/2 + 'px)';
+				this.tUpper+= ty2 + ty3 + ty4;
+				this.tLower+= ty2 + ty3 + ty4;
+			}
 		},
 
 		applyWebkitTransforms: function(){
