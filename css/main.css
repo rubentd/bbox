@@ -126,3 +126,68 @@ li.core{
 	top:0;
 	left:100%;
 }
+
+
+.planetool{
+	position:relative;
+	border:1px dashed green;
+	width:200px;
+	height:200px;
+	display:block;
+	position:absolute;
+	pointer-events:none;
+}
+
+.planetool.xy{
+	-webkit-transform:translateX(-100px) translateY(-100px);
+}
+
+.planetool.xz{
+	-webkit-transform:translateZ(-100px) rotateX(90deg) translateX(-100px) translateY(100px) translateZ(100px);
+}
+
+.planetool.yz{
+	-webkit-transform:translateZ(-100px) rotateY(90deg) translateX(-100px) translateY(-100px) translateZ(-100px);
+}
+
+.resize-handle{
+	background-color:green;
+	display:block;	
+	position:absolute;
+	cursor:pointer;
+	pointer-events:auto;
+}
+
+.resize-handle.top{
+	width:4px;
+	height:30px;
+	left:50%;
+	top:-30px;
+	margin-left:-2px;
+}
+
+.resize-handle.bottom{
+	width:4px;
+	height:30px;
+	left:50%;
+	top:100%;
+	margin-left:-2px;
+}
+
+.resize-handle.left{
+	width:30px;
+	height:4px;
+	left:-30px;
+	top:50%;
+	margin-top:-2px;
+}
+
+.resize-handle.right{
+	width:30px;
+	height:4px;
+	left:100%;
+	top:50%;
+	margin-top:-2px;
+}
+
+

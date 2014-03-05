@@ -52,8 +52,10 @@ function radToDeg(angle){
 		this.shearTopZ=0;
 		
 		//tools
-		this.currentTool='planeShear'; //none, planeShear
-		this.planeShear=$('#tool-plane-shear-wrap');
+		this.planeToolXY=$('.planetool.xy');
+		this.planeToolXZ=$('.planetool.xz');
+		this.planeToolYZ=$('.planetool.yz');
+
 	}
 
 	BoundingBox.prototype = {
@@ -78,21 +80,23 @@ function radToDeg(angle){
 				box.depth=parseInt($(this).val());
 				box.redraw();
 			});
-			$("input[name=tool]").change(function(){
-				box.currentTool=parseInt($(this).val());
-				box.redraw();
-			});
 
 			//Plane shear
 			$("#ps-top-x").change(function(){
+				box.resetShearY();
+				box.resetShearZ();
 				box.shearTopX=degToRad($(this).val());
 				box.redraw();
 			});
 			$("#ps-top-y").change(function(){
+				box.resetShearX();
+				box.resetShearZ();
 				box.shearTopY=degToRad($(this).val());
 				box.redraw();
 			});
 			$("#ps-top-z").change(function(){
+				box.resetShearX();
+				box.resetShearY();
 				box.shearTopZ=degToRad($(this).val());
 				box.redraw();
 			});
@@ -228,15 +232,78 @@ function radToDeg(angle){
 		},
 
 		drawTools: function(){
-			switch(this.currentTool){
-				case 'none':
-					this.planeShear.hide();
-					break;
-				case 'planeShear':
-					this.planeShear.show();
-					break;
+			
+			this.planeToolXY.css('width', this.width + 'px');
+			this.planeToolXY.css('height', this.height + 'px');
+			var txy='';
+			txy += ' translateX(-'+this.width/2+'px)';
+			txy += ' translateY(-'+this.height/2+'px)';
+			this.planeToolXY.css('-webkit-transform', txy);
+
+			this.planeToolXZ.css('width', this.width + 'px');
+			this.planeToolXZ.css('height', this.depth + 'px');
+			var txz='';
+			txz += 'translateZ(-'+this.width/2+'px)';
+			txz += 'rotateX(90deg)';
+			txz += 'translateX(-'+this.width/2+'px)';
+			txz += 'translateY('+this.width/2+'px)';
+			txz += 'translateZ('+this.depth/2+'px)';
+			this.planeToolXZ.css('-webkit-transform', txz);
+
+			this.planeToolYZ.css('width', this.depth + 'px');
+			this.planeToolYZ.css('height', this.height + 'px');
+			var tyz='';
+			tyz += 'translateZ(-'+this.depth/2+'px)';
+			tyz += 'rotateY(90deg)';
+			tyz += 'translateX(-'+this.depth/2+'px)';
+			tyz += 'translateY(-'+this.height/2+'px)';
+			tyz += 'translateZ(-'+this.depth/2+'px)';
+			this.planeToolYZ.css('-webkit-transform', tyz);
+
+			if(this.shearTopX > 0 ||
+				this.shearTopY > 0 ||
+				this.shearTopZ > 0){
+				this.hidePlaneTools();
+			}else{
+				this.showPlaneTools();
 			}
+
 		},
+
+		hidePlaneTools: function(){
+			this.planeToolXY.hide();
+			this.planeToolXZ.hide();
+			this.planeToolYZ.hide();
+		},
+
+		showPlaneTools: function(){
+			this.planeToolXY.show();
+			this.planeToolXZ.show();
+			this.planeToolYZ.show();
+		},
+
+		resetShearX: function(){
+			$("#ps-top-x").val(0);
+			this.shearTopX=0;
+			this.clearTransforms();
+		},
+
+		resetShearY: function(){
+			$("#ps-top-y").val(0);
+			this.shearTopY=0;
+			this.clearTransforms();
+		},
+
+		resetShearZ: function(){
+			$("#ps-top-z").val(0);
+			this.shearTopZ=0;
+			this.clearTransforms();
+		},
+
+		clearTransforms: function(){
+			$('.face').attr('style', '');
+			$('.vertex').attr('style', '');
+		}
 
 	}
 

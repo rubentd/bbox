@@ -22,21 +22,24 @@
 				<label>depth:</label> <input type="number" min="10" max="1000" id="depth" value="200"><br>
 				<p>Plane shear amount<p>
 				<label>shear X</label><input type="number" min="-90" max="90" id="ps-top-x" value="0"><br>
-				<!--<label>shear Y</label><input type="number" min="-90" max="90" id="ps-top-y" value="0"><br>-->
+				<label>shear Y</label><input type="number" min="-90" max="90" id="ps-top-y" value="0"><br>
 				<label>shear Z</label><input type="number" min="-90" max="90" id="ps-top-z" value="0"><br>
 
-				<!-- <p>Current tool:</p>
-				<label for="tool-none">None</label>
-				<input type="radio" id="tool-none" name="tool" value="none">
-				<label for="tool-plane-shear">Plane shear</label>
-				<input type="radio" id="tool-plane-shear" name="tool" value="planeShear" checked>
- 				-->
 			</div>
 			
 			<div id="bbox1" class="bbox-wrap">
 				<ul class="bbox">
-					<li class="core"></li>
-					
+
+					<!-- center of the bounding box -->
+					<li class="core">
+						<div class="tool resize top"></div>
+						<div class="tool resize bottom"></div>
+						<div class="tool resize left"></div>
+						<div class="tool resize right"></div>
+					</li>
+
+
+					<!-- faces -->
 					<li class="face front">
 						<div class="vertex front top"></div>
 						<div class="vertex front bottom"></div>
@@ -59,6 +62,28 @@
 					<li class="face lower">
 						<div class="vertex lower left"></div>
 						<div class="vertex lower right"></div>
+					</li>
+
+					<!-- tools -->
+					<li class="planetool xy">
+						<div class="resize-handle top"></div>
+						<div class="resize-handle bottom"></div>
+						<div class="resize-handle left"></div>
+						<div class="resize-handle right"></div>
+					</li>
+
+					<li class="planetool xz">
+						<div class="resize-handle top"></div>
+						<div class="resize-handle bottom"></div>
+						<div class="resize-handle left"></div>
+						<div class="resize-handle right"></div>
+					</li>
+
+					<li class="planetool yz">
+						<div class="resize-handle top"></div>
+						<div class="resize-handle bottom"></div>
+						<div class="resize-handle left"></div>
+						<div class="resize-handle right"></div>
 					</li>
 				</ul>
 			</div>
