@@ -56,27 +56,35 @@ function radToDeg(angle){
 		this.planeToolXZ=$('.planetool.xz');
 		this.planeToolYZ=$('.planetool.yz');
 
+		//some values needed for UI drag and drop
+		this.mouseX = 0;
+		this.mouseY = 0;
+		this.currentActiveControl=$(document);
+		this.currentTransformationValue=0;
+		this.currentTransformation='none';
+
 	}
 
 	BoundingBox.prototype = {
 		
 		init: function(){
 			this.addDomEvents();
+			this.addToolEvents();
 			this.redraw();
 			this.drawTools();
 		},
 
 		addDomEvents: function(){
 			var box=this;
-			$('#width').on('keyup keydown', function(){
+			$('#width').on('keyup keydown change', function(){
 				box.width=parseInt($(this).val());
 				box.redraw();
 			});
-			$('#height').on('keyup keydown', function(){
+			$('#height').on('keyup keydown change', function(){
 				box.height=parseInt($(this).val());
 				box.redraw();
 			});
-			$('#depth').on('keyup keydown', function(){
+			$('#depth').on('keyup keydown change', function(){
 				box.depth=parseInt($(this).val());
 				box.redraw();
 			});
@@ -303,6 +311,35 @@ function radToDeg(angle){
 		clearTransforms: function(){
 			$('.face').attr('style', '');
 			$('.vertex').attr('style', '');
+		},
+
+		addToolEvents: function(){
+			var bbox = this;
+			$('.control').mousedown( function(e){
+				$(this).addClass('moving');
+				bbox.mouseX = e.pageX;
+				bbox.mouseY = e.pageY;
+				bbox.currentActiveControl=$(this);
+				bbox.currentTransformation=$(this).attr('data-trans');
+				bbox.currentTransformationValue=parseInt($("#" + bbox.currentTransformation).val());
+			});
+			$(document).mousemove( function(e){
+				if($(bbox.currentActiveControl).hasClass('moving')){
+					//calculate the amount of the transformation 
+					//according on the mouse position
+					var deltaX=Math.abs(bbox.mouseX-e.pageX);
+					var deltaY=Math.abs(bbox.mouseY-e.pageY);
+					var delta = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+					var current = bbox.currentTransformationValue;
+					$("#" + bbox.currentTransformation).val(parseInt(current + delta));
+					$("#" + bbox.currentTransformation).trigger('change');
+
+				}
+			});
+			$(document).mouseup( function(){
+				bbox.currentActiveControl.removeClass('moving');
+				bbox.currentActiveControl=$(document);
+			});
 		}
 
 	}
