@@ -130,7 +130,7 @@ li.core{
 
 .planetool{
 	position:relative;
-	border:1px dashed green;
+	border:none;
 	width:200px;
 	height:200px;
 	display:block;
@@ -151,11 +151,21 @@ li.core{
 }
 
 .resize-handle{
-	background-color:green;
+	background-color:#6BCFB9;
 	display:block;	
 	position:absolute;
 	cursor:pointer;
 	pointer-events:auto;
+	border:2px solid transparent;
+	opacity:.5;
+}
+
+.resize-handle:hover{
+	background-color:red;
+}
+
+.resize-handle.moving{
+	background-color:red;
 }
 
 .resize-handle.top{
@@ -192,11 +202,21 @@ li.core{
 
 
 .shear-handle{
-	background-color:green;
+	background-color:#6BCFB9;
 	display:block;	
 	position:absolute;
 	cursor:pointer;
 	pointer-events:auto;
+	border:2px solid transparent;
+	opacity:.5;
+}
+
+.shear-handle:hover{
+	background-color:red;
+}
+
+.shear-handle.moving{
+	background-color:red;
 }
 
 .shear-handle.top{
@@ -225,4 +245,5 @@ li.core{
 	height:100%;
 	left:100%;
 	top:0;
+	-webkit-transform:rotateY(45deg);
 }

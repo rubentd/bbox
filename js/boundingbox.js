@@ -277,14 +277,6 @@ function radToDeg(angle){
 			tyz += 'translateZ(-'+this.depth/2+'px)';
 			this.planeToolYZ.css('-webkit-transform', tyz);
 
-			if(this.shearTopX != 0 ||
-				this.shearTopY != 0 ||
-				this.shearTopZ != 0){
-				this.hidePlaneTools();
-			}else{
-				this.showPlaneTools();
-			}
-
 		},
 
 		hidePlaneTools: function(){
@@ -325,7 +317,9 @@ function radToDeg(angle){
 		addToolEvents: function(){
 			var bbox = this;
 			$('.control').mousedown( function(e){
+				$('.control').hide();
 				$(this).addClass('moving');
+				$(this).show();
 				bbox.mouseX = e.pageX;
 				bbox.mouseY = e.pageY;
 				bbox.currentActiveControl=$(this);
@@ -335,27 +329,48 @@ function radToDeg(angle){
 
 			$(document).mousemove( function(e){
 				if($(bbox.currentActiveControl).hasClass('moving')){
-					//calculate the amount of the transformation 
-					//First: distance between the control and the center
-					var dcX=bbox.mouseX-bbox.centerX;
-					var dcY=bbox.mouseY-bbox.centerY;
-					var controlDist=Math.sqrt(dcX*dcX + dcY*dcY);
-
-					//Second: distance between the mouse and the center
-					var dmX=e.pageX-bbox.centerX;
-					var dmY=e.pageY-bbox.centerY;
-					var mouseDist=Math.sqrt(dmX*dmX + dmY*dmY);
-
-					var delta = mouseDist - controlDist;
+					var delta=0;
+					if($(bbox.currentActiveControl).hasClass('resize-handle')){
+						//calculate the amount of the transformation 
+						//First: distance between the control and the center
+						var dcX=bbox.mouseX-bbox.centerX;
+						var dcY=bbox.mouseY-bbox.centerY;
+						var controlDist=Math.sqrt(dcX*dcX + dcY*dcY);
+						//Second: distance between the mouse and the center
+						var dmX=e.pageX-bbox.centerX;
+						var dmY=e.pageY-bbox.centerY;
+						var mouseDist=Math.sqrt(dmX*dmX + dmY*dmY);
+						delta = mouseDist - controlDist;
+						bbox.applyUITransform(delta);
+					}
+					if($(bbox.currentActiveControl).hasClass('shear-handle')){
+						//Calculate horizontal or vertical movement of the gizmo,
+						//according to the case
+						delta=(e.pageX-bbox.mouseX)/5;
+						if((bbox.currentTransformationValue+delta) < 90 &&
+							(bbox.currentTransformationValue+delta) > -90){
+							bbox.applyUITransform(delta);
+						}
+						var sin=Math.sin(bbox.shearTopX)*bbox.height;
+						var cos=Math.cos(bbox.shearTopX)*bbox.height;
+						console.log(sin);
+						//Update control's coordinates
+						
+					}
 					
-					bbox.applyUITransform(delta);
-
 				}
 			});
 			$(document).mouseup( function(){
 				bbox.currentActiveControl.removeClass('moving');
 				bbox.currentActiveControl=$(document);
+				$('.control').show();
+				bbox.resetShearInputs();
 			});
+		},
+
+		resetShearInputs: function(){
+			$("#ps-top-x").val(0);
+			$("#ps-top-x").trigger('change');
 		},
 
 		applyUITransform: function(delta){
@@ -391,6 +406,9 @@ function radToDeg(angle){
 					if(this.currentActiveControl.hasClass('right')){
 						this.transZ = -delta/2;
 					}
+					break;
+				case 'ps-top-x':
+					this.shearTopX = delta/2;
 					break;
 			}
 
