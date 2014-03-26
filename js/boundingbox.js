@@ -17,7 +17,9 @@ function radToDeg(angle){
 		this.width=options.width;
 		this.height=options.width;
 		this.depth=options.depth;
-		this.mainBox=elem;
+		this.mainBox=elem.find('.bbox');
+
+		this.mainBoxTransforms='';
 
 		//Translations overt main box
 		this.transX=0;
@@ -64,6 +66,8 @@ function radToDeg(angle){
 		this.planeToolXY=$('.planetool.xy');
 		this.planeToolXZ=$('.planetool.xz');
 		this.planeToolYZ=$('.planetool.yz');
+		this.currentTool="shear";
+		this.updateToolVisibility();
 
 		//some values needed for UI drag and drop
 		this.mouseX = 0;
@@ -71,6 +75,7 @@ function radToDeg(angle){
 		this.currentActiveControl=$(document);
 		this.currentTransformationValue=0;
 		this.currentTransformation='none';
+
 
 	}
 
@@ -85,6 +90,12 @@ function radToDeg(angle){
 
 		addDomEvents: function(){
 			var box=this;
+			
+			$('input[name=tool-select]').change(function(){
+				box.currentTool = $(this).val();
+				box.updateToolVisibility();
+			});
+
 			$('#width').on('keyup keydown change', function(){
 				box.width=parseInt($(this).val());
 				box.redraw();
@@ -124,6 +135,18 @@ function radToDeg(angle){
 			this.shearTransformations();
 			this.applyWebkitTransforms();
 			this.drawTools();
+		},
+
+		updateToolVisibility: function(){
+				if(this.currentTool=="resize"){
+					$(".control.resize-handle").show();
+					$(".control.shear-handle").hide();
+					$(".control.move-center-handle").show();
+				}else{
+					$(".control.shear-handle").show();
+					$(".control.resize-handle").hide();
+					$(".control.move-center-handle").hide();
+				}
 		},
 
 		sizeTransformations: function(){
@@ -310,61 +333,115 @@ function radToDeg(angle){
 		},
 
 		clearTransforms: function(){
+			this.tFront='';
+			this.tBack='';
+			this.tUpper='';
+			this.tLower='';
+			this.applyWebkitTransforms();
 			$('.face').attr('style', '');
 			$('.vertex').attr('style', '');
+			this.mainBoxTransforms='';
+			this.mainBox.css('webkit-transform', this.mainBoxTransforms);
 		},
 
 		addToolEvents: function(){
 			var bbox = this;
+
 			$('.control').mousedown( function(e){
+				if(bbox.currentTool == 'resize'){
+					bbox.transX=0;
+					bbox.transY=0;
+					bbox.transZ=0;
+				}
+
+				bbox.mainBoxTransforms=''
 				$('.control').hide();
 				$(this).addClass('moving');
-				$(this).show();
 				bbox.mouseX = e.pageX;
 				bbox.mouseY = e.pageY;
 				bbox.currentActiveControl=$(this);
 				bbox.currentTransformation=$(this).attr('data-trans');
 				bbox.currentTransformationValue=parseInt($("#" + bbox.currentTransformation).val());
+				if(bbox.currentActiveControl.hasClass('move-center-handle')){
+					bbox.currentActiveControl.show();
+				}
 			});
 
 			$(document).mousemove( function(e){
 				if($(bbox.currentActiveControl).hasClass('moving')){
 					var delta=0;
-					if($(bbox.currentActiveControl).hasClass('resize-handle')){
-						//calculate the amount of the transformation 
-						//First: distance between the control and the center
-						var dcX=bbox.mouseX-bbox.centerX;
-						var dcY=bbox.mouseY-bbox.centerY;
-						var controlDist=Math.sqrt(dcX*dcX + dcY*dcY);
-						//Second: distance between the mouse and the center
-						var dmX=e.pageX-bbox.centerX;
-						var dmY=e.pageY-bbox.centerY;
-						var mouseDist=Math.sqrt(dmX*dmX + dmY*dmY);
-						delta = mouseDist - controlDist;
-						bbox.applyUITransform(delta);
-					}
-					if($(bbox.currentActiveControl).hasClass('shear-handle')){
-						//Calculate horizontal or vertical movement of the gizmo,
-						//according to the case
-						delta=(e.pageX-bbox.mouseX)/5;
-						if((bbox.currentTransformationValue+delta) < 90 &&
-							(bbox.currentTransformationValue+delta) > -90){
+					if(bbox.currentTool == 'resize'){
+						if($(bbox.currentActiveControl).hasClass('resize-handle')){
+							//calculate the amount of the transformation 
+							//First: distance between the control and the center
+							var dcX=bbox.mouseX-bbox.centerX;
+							var dcY=bbox.mouseY-bbox.centerY;
+							var controlDist=Math.sqrt(dcX*dcX + dcY*dcY);
+							//Second: distance between the mouse and the center
+							var dmX=e.pageX-bbox.centerX;
+							var dmY=e.pageY-bbox.centerY;
+							var mouseDist=Math.sqrt(dmX*dmX + dmY*dmY);
+							delta = mouseDist - controlDist;
+							bbox.applyUITransform(delta);
+						}else if($(bbox.currentActiveControl).hasClass('move-center-handle')){
+							//Calculate horizontal or vertical movement of the gizmo,
+							//according to the case
+							if(bbox.currentActiveControl.hasClass('xy')){
+								delta=(e.pageX-bbox.mouseX);
+							}
+							if(bbox.currentActiveControl.hasClass('xz')){
+								delta=-(e.pageY-bbox.mouseY);
+							}
+							if(bbox.currentActiveControl.hasClass('yz')){
+								delta=(e.pageX-bbox.mouseX);
+							}
+							//get in range
+							if(delta < -100){
+								delta = -100;
+							}else if(delta > 100){
+								delta = 100;
+							}
 							bbox.applyUITransform(delta);
 						}
-						var sin=Math.sin(bbox.shearTopX)*bbox.height;
-						var cos=Math.cos(bbox.shearTopX)*bbox.height;
-						console.log(sin);
-						//Update control's coordinates
-						
+					}else if(bbox.currentTool == 'shear'){
+						if($(bbox.currentActiveControl).hasClass('shear-handle')){
+							//Calculate horizontal or vertical movement of the gizmo,
+							//according to the case
+							if(bbox.currentActiveControl.hasClass('top')
+								|| bbox.currentActiveControl.hasClass('bottom')){
+								delta=(e.pageX-bbox.mouseX)/5;
+							}else if(bbox.currentActiveControl.hasClass('right')){
+								delta=(e.pageY-bbox.mouseY)/5;
+							}else if(bbox.currentActiveControl.hasClass('left')){
+								delta=(bbox.mouseY-e.pageY)/5;
+							}
+							if((bbox.currentTransformationValue+delta) < 90 &&
+								(bbox.currentTransformationValue+delta) > -90){
+								bbox.applyUITransform(delta);
+							}
+							
+						}
 					}
 					
 				}
 			});
 			$(document).mouseup( function(){
+				var transforms = '';
 				bbox.currentActiveControl.removeClass('moving');
 				bbox.currentActiveControl=$(document);
-				$('.control').show();
-				bbox.resetShearInputs();
+				
+				if(bbox.currentTool == 'resize'){
+					this.width=200;
+					this.height=200;
+					this.depth=200;
+					bbox.resetResizeInputs();
+					$('.control.resize-handle').show();
+					$('.control.move-center-handle').show();
+				}else if(bbox.currentTool == 'shear'){
+					bbox.resetShearInputs();
+					$('.control.shear-handle').show();
+				}
+				bbox.clearTransforms();
 			});
 		},
 
@@ -373,11 +450,23 @@ function radToDeg(angle){
 			$("#ps-top-x").trigger('change');
 		},
 
+		resetResizeInputs: function(){
+			$("#height").val(200);
+			$("#height").trigger('change');
+			$("#width").val(200);
+			$("#width").trigger('change');
+			$("#depth").val(200);
+			$("#depth").trigger('change');
+		},
+
 		applyUITransform: function(delta){
+			this.mainBoxTransforms='';
 			var current = this.currentTransformationValue;
 			$("#" + this.currentTransformation).val(parseInt(current + delta));
 			$("#" + this.currentTransformation).trigger('change');
 			var transforms = '';
+			this.mainBox.css('webkit-transform', this.mainBoxTransforms);
+
 			// TODO: 
 			// stack transformations per axis so they are not resetted
 
@@ -408,12 +497,85 @@ function radToDeg(angle){
 					}
 					break;
 				case 'ps-top-x':
+					//In case we have a shear transformation, we rotate the bounding box
+					//to execute any shear transformation using the shear top x transformation
 					this.shearTopX = delta/2;
+					this.rotateBoundingBoxToShear();
+					break;
+				case 'move-center-xy':
+					var trans='translateX(-' + this.width/2+ 'px)';
+					trans+='translateY(-' + this.height/2+ 'px)';
+					trans += ' translateZ(' + delta + 'px)'; 
+					this.currentActiveControl.css('-webkit-transform', trans);
+					break;
+				case 'move-center-xz':
+					var trans='translateZ(-' + this.depth/2+ 'px)';
+					trans+=' rotateX(90deg)';
+					trans+=' translateX(-' + this.width/2 + 'px)';
+					trans+='translateY(' + this.height/2+ 'px)';
+					trans+= ' translateZ(' + (this.depth/2+delta) + 'px)'; 
+					this.currentActiveControl.css('-webkit-transform', trans);
+					break;
+				case 'move-center-yz':
+					var trans='translateZ(-' + this.depth/2+ 'px)';
+					trans+=' rotateY(90deg)';
+					trans+=' translateX(-' + this.width/2 + 'px)';
+					trans+='translateY(-' + this.height/2+ 'px)';
+					trans+= ' translateZ(-' + (-delta+this.width/2) + 'px)';  
+					this.currentActiveControl.css('-webkit-transform', trans);
 					break;
 			}
 
-			this.mainBox.find('.bbox').css('webkit-transform', 
-				'translateX(' + this.transX + 'px) translateY(' + this.transY + 'px) translateZ(' + this.transZ + 'px)');
+			this.mainBoxTransforms+=' translateX(' + this.transX + 'px) translateY(' + this.transY + 'px) translateZ(' + this.transZ + 'px)';
+
+			this.mainBox.css('webkit-transform', this.mainBoxTransforms);
+		},
+
+		rotateBoundingBoxToShear: function(){
+			//Rotate to achieve shear on any side
+			this.mainBox.css('-webkit-transform-origin', '0% 0%');
+			
+			if(this.currentActiveControl.hasClass('xy-bottom')){
+				this.mainBoxTransforms += ' rotateX(180deg)';
+			}
+			if(this.currentActiveControl.hasClass('xy-left')){
+				this.mainBoxTransforms += ' rotateZ(-90deg)';
+			}
+			if(this.currentActiveControl.hasClass('xy-right')){
+				this.mainBoxTransforms += ' rotateZ(90deg)';
+			}
+
+			if(this.currentActiveControl.hasClass('xz-right')){
+				this.mainBoxTransforms += ' rotateX(90deg)';
+				this.mainBoxTransforms += ' rotateZ(90deg)';
+			}
+			if(this.currentActiveControl.hasClass('xz-left')){
+				this.mainBoxTransforms += ' rotateX(90deg)';
+				this.mainBoxTransforms += ' rotateZ(-90deg)';
+			}
+			if(this.currentActiveControl.hasClass('xz-top')){
+				this.mainBoxTransforms += ' rotateX(90deg)';
+			}
+			if(this.currentActiveControl.hasClass('xz-bottom')){
+				this.mainBoxTransforms += ' rotateX(-90deg)';
+			}
+
+			if(this.currentActiveControl.hasClass('yz-left')){
+				this.mainBoxTransforms += ' rotateY(90deg)';
+				this.mainBoxTransforms += ' rotateZ(-90deg)';
+			}
+			if(this.currentActiveControl.hasClass('yz-right')){
+				this.mainBoxTransforms += ' rotateY(90deg)';
+				this.mainBoxTransforms += ' rotateZ(90deg)';
+			}
+			if(this.currentActiveControl.hasClass('yz-top')){
+				this.mainBoxTransforms += ' rotateY(-90deg)';
+			}
+			if(this.currentActiveControl.hasClass('yz-bottom')){
+				this.mainBoxTransforms += ' rotateY(-90deg)';
+				this.mainBoxTransforms += ' rotateX(180deg)';
+			}
+
 		}
 
 	}

@@ -135,6 +135,7 @@ li.core{
 	height:200px;
 	display:block;
 	position:absolute;
+	box-sizing:border-box;
 	pointer-events:none;
 }
 
@@ -209,6 +210,7 @@ li.core{
 	pointer-events:auto;
 	border:2px solid transparent;
 	opacity:.5;
+	box-sizing:border-box;
 }
 
 .shear-handle:hover{
@@ -246,4 +248,31 @@ li.core{
 	left:100%;
 	top:0;
 	-webkit-transform:rotateY(45deg);
+}
+
+.move-center-handle{
+	width:200px;
+	height:200px;
+	border:5px solid #6BCFB9;
+	display:block;	
+	opacity:.5;
+	box-sizing:border-box;
+	cursor: pointer;
+	position:absolute;
+}
+
+.move-center-handle.xy{
+	-webkit-transform:translateX(-100px) translateY(-100px);
+}
+
+.move-center-handle.xz{
+	-webkit-transform:translateZ(-100px) rotateX(90deg) translateX(-100px) translateY(100px) translateZ(100px);
+}
+
+.move-center-handle.yz{
+	-webkit-transform:translateZ(-100px) rotateY(90deg) translateX(-100px) translateY(-100px) translateZ(-100px);
+}
+
+.move-center-handle:hover{
+	border:5px solid red;
 }

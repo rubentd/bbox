@@ -19,19 +19,22 @@
 			<div class="menu properties">
 				<label>Tool:</label>
 				<p>
+				<input id="shear-select" type="radio" name="tool-select" value="shear" checked>
+					<label for="shear-select">Plane shear</label><br>
 				<input id="resize-select" type="radio" name="tool-select" value="resize">
 					<label for="resize-select">Resize</label>
-				<br>
-				<input id="shear-select" type="radio" name="tool-select" value="shear">
-					<label for="shear-select">Plane shear</label>
 				</p>
+				<br>
 
-				<div style="display:none;">
+				<div style = "display:none;">
 					<label>width:</label> <input type="number" min="10" max="1000" id="width" value="200"><br>
 					<label>height:</label> <input type="number" min="10" max="1000" id="height" value="200"><br>
 					<label>depth:</label> <input type="number" min="10" max="1000" id="depth" value="200"><br>
 					<p>Plane shear amount</p>
-					<label>shear X</label><input type="number" min="-90" max="90" id="ps-top-x" value="0"><br>
+					<label>shear X</label>
+					<input type="number" min="-90" max="90" id="ps-top-x" value="0"><br>
+					<input type="number" min="-90" max="90" id="ps-bottom-x" value="0"><br>
+
 					<label>shear Y</label><input type="number" min="-90" max="90" id="ps-top-y" value="0"><br>
 					<label>shear Z</label><input type="number" min="-90" max="90" id="ps-top-z" value="0"><br>
 				</div>
@@ -72,32 +75,43 @@
 
 					<!-- tools -->
 					<li class="planetool xy">
+
+						<!-- Resizing tools -->
 						<div class="control resize-handle top" data-trans="height"></div>
 						<div class="control resize-handle bottom" data-trans="height"></div>
 						<div class="control resize-handle left" data-trans="width"></div>
 						<div class="control resize-handle right" data-trans="width"></div>
 
-						<div class="control shear-handle top" data-trans="ps-top-x"></div>
-						<div class="control shear-handle right" data-trans=""></div>
-						<div class="control shear-handle bottom" data-trans=""></div>
-						<div class="control shear-handle left" data-trans=""></div>
+						<!-- Shear tools -->
+						<div class="control shear-handle top xy-top" data-trans="ps-top-x"></div>
+						<div class="control shear-handle right xy-right" data-trans="ps-top-x"></div>
+						<div class="control shear-handle bottom xy-bottom" data-trans="ps-top-x"></div>
+						<div class="control shear-handle left xy-left" data-trans="ps-top-x"></div>
 					</li>
 
 					<li class="planetool xz">
-						<div class="control shear-handle top" data-trans=""></div>
-						<div class="control shear-handle right" data-trans=""></div>
-						<div class="control shear-handle bottom" data-trans=""></div>
-						<div class="control shear-handle left" data-trans=""></div>
+						<!-- Shear tools -->
+						<div class="control shear-handle top xz-top" data-trans="ps-top-x"></div>
+						<div class="control shear-handle right xz-right" data-trans="ps-top-x"></div>
+						<div class="control shear-handle bottom xz-bottom" data-trans="ps-top-x"></div>
+						<div class="control shear-handle left  xz-left" data-trans="ps-top-x"></div>
 					</li>
 
+					
+					<li class="control move-center-handle xy" data-trans="move-center-xy"></li>
+					<li class="control move-center-handle xz" data-trans="move-center-xz"></li>
+					<li class="control move-center-handle yz" data-trans="move-center-yz"></li>
+
 					<li class="planetool yz">
+						<!-- Resizing tools -->
 						<div class="control resize-handle left" data-trans="depth"></div>
 						<div class="control resize-handle right" data-trans="depth"></div>
 
-						<div class="control shear-handle top" data-trans=""></div>
-						<div class="control shear-handle right" data-trans=""></div>
-						<div class="control shear-handle bottom" data-trans=""></div>
-						<div class="control shear-handle left" data-trans=""></div>
+						<!-- Shear tools -->
+						<div class="control shear-handle top yz-top" data-trans="ps-top-x"></div>
+						<div class="control shear-handle right yz-right" data-trans="ps-top-x"></div>
+						<div class="control shear-handle bottom yz-bottom" data-trans="ps-top-x"></div>
+						<div class="control shear-handle left yz-left" data-trans="ps-top-x"></div>
 					</li>
 				</ul>
 			</div>
